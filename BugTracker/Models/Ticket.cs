@@ -41,6 +41,7 @@ namespace BugTracker.Models
 
 
         // Foreign Keys
+        [Required]
         public string? SubmitterUserId { get; set; }
 
         public string? DeveloperUserId { get; set; }

@@ -1,21 +1,21 @@
-﻿@model BugTracker.Models.Project
+﻿@model BugTracker.Models.Ticket
 
 @{
     ViewData["Title"] = "Archive";
 }
 
-<h1>Archive</h1>
+<h1>Delete</h1>
 
 <h3>Are you sure you want to archive this?</h3>
 <div>
-    <h4>Project</h4>
+    <h4>Ticket</h4>
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Name)
+            @Html.DisplayNameFor(model => model.Title)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Name)
+            @Html.DisplayFor(model => model.Title)
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Description)
@@ -30,34 +30,10 @@
             @Html.DisplayFor(model => model.Created)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.StartDate)
+            @Html.DisplayNameFor(model => model.Updated)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.StartDate)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.EndDate)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.EndDate)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ImageFileName)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ImageFileName)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ImageFileData)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ImageFileData)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ImageContentType)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ImageContentType)
+            @Html.DisplayFor(model => model.Updated)
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Archived)
@@ -66,16 +42,46 @@
             @Html.DisplayFor(model => model.Archived)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Company)
+            @Html.DisplayNameFor(model => model.ArchivedByProject)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Company.Name)
+            @Html.DisplayFor(model => model.ArchivedByProject)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ProjectPriority)
+            @Html.DisplayNameFor(model => model.Project)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ProjectPriority.Name)
+            @Html.DisplayFor(model => model.Project.Description)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.TicketPriority)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.TicketPriority.Name)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.TicketStatus)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.TicketStatus.Name)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.TicketType)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.TicketType.Name)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.SubmitterUser)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.SubmitterUser.Id)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.DeveloperUser)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.DeveloperUser.Id)
         </dd>
     </dl>
     

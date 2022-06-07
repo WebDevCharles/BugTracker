@@ -7,6 +7,7 @@ namespace BugTracker.Services.Factories
 {
     public class BTUserClaimsPrincipalFactory : UserClaimsPrincipalFactory<BTUser, IdentityRole>
     {
+        
         public BTUserClaimsPrincipalFactory(UserManager<BTUser> userManager,
                                             RoleManager<IdentityRole> roleManager,
                                             IOptions<IdentityOptions> optionsAccessor)

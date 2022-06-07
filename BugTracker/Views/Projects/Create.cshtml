@@ -11,12 +11,7 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create">
-            @*<div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="CompanyId" class="control-label"></label>
-                <select asp-for="CompanyId" class ="form-control" asp-items="ViewBag.CompanyId"></select>
-            </div>*@
+        <form asp-action="Create" enctype="multipart/form-data">
             <div class="form-group">
                 <label asp-for="Project!.Name" class="control-label"></label>
                 <input asp-for="Project!.Name" class="form-control" />
@@ -27,11 +22,6 @@
                 <input asp-for="Project!.Description" class="form-control" />
                 <span asp-validation-for="Project!.Description" class="text-danger"></span>
             </div>
-            @*<div class="form-group">
-                <label asp-for="Created" class="control-label"></label>
-                <input asp-for="Created" class="form-control" />
-                <span asp-validation-for="Created" class="text-danger"></span>
-            </div>*@
             <div class="form-group">
                 <label asp-for="Project!.StartDate" class="control-label"></label>
                 <input asp-for="Project!.StartDate" class="form-control" />
@@ -44,30 +34,25 @@
             </div>
             <div class="form-group">
                 <label asp-for="Project!.ProjectPriorityId" class="control-label"></label>
-                <select asp-for="Project!.ProjectPriorityId" class ="form-control" asp-items="@Model.PriorityList"></select>
-            </div>
-            @*<div class="form-group">
-                <label asp-for="ImageFileName" class="control-label"></label>
-                <input asp-for="ImageFileName" class="form-control" />
-                <span asp-validation-for="ImageFileName" class="text-danger"></span>
+                <select asp-for="Project!.ProjectPriorityId" class="form-control" asp-items="@Model.PriorityList"></select>
             </div>
             <div class="form-group">
-                <label asp-for="ImageFileData" class="control-label"></label>
-                <input asp-for="ImageFileData" class="form-control" />
-                <span asp-validation-for="ImageFileData" class="text-danger"></span>
+                <label class="control-label">Project Image</label>
+                <input asp-for="Project!.ImageFormFile" class="form-control" accept=".png,.jpg,.jpeg,.gif,.svg"
+                       onchange="document.getElementById('imageFileData').src = window.URL.createObjectURL(this.files[0])" />
             </div>
-            <div class="form-group">
-                <label asp-for="ImageContentType" class="control-label"></label>
-                <input asp-for="ImageContentType" class="form-control" />
-                <span asp-validation-for="ImageContentType" class="text-danger"></span>
-            </div>*@
-            @*<div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="Archived" /> @Html.DisplayNameFor(model => model.Archived)
-                </label>
-            </div>*@
 
-            @if(User.IsInRole(nameof(BTRoles.Admin)))
+            <label>Image Preview</label>
+            @if (Model.Project?.ImageFileData != null)
+            {
+                <img id="imageFileData" src="data:image/*;base64,@(Convert.ToBase64String(Model.Project.ImageFileData!))" class="img-fluid img-thumbnail" style="width:100px;height:80px">
+            }
+            else
+            {
+                <img id="imageFileData" src="https://cdn.icon-icons.com/icons2/2331/PNG/512/task_software_platform_management_project_icon_142266.png" class="img-fluid img-thumbnail" style="width:100px;height:80px">
+            }
+
+            @if (User.IsInRole(nameof(BTRoles.Admin)))
             {
                 <div class="form-group">
                     <label class="control-label"> Project Manager</label>
@@ -89,5 +74,7 @@
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    }

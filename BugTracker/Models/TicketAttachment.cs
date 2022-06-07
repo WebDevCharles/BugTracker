@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using BugTracker.Extensions;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -30,7 +31,8 @@ namespace BugTracker.Models
 
         [NotMapped]
         [DataType(DataType.Upload)]
-        // TODO: Add custom attributes
+        [MaxFileSize(1024 * 1024)]
+        [AllowedExtensions(new string[] {".jpg", ".jpeg", ".png", ".doc", ".docx", ".xls", ".xlsx", ".pdf", ".ppt", ".pptx", ".html", ".svg"})]
         public IFormFile? FormFile { get; set; }
 
 

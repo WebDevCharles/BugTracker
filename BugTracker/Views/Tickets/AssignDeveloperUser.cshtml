@@ -1,0 +1,83 @@
+﻿@using BugTracker.Models.Enums
+@model BugTracker.Models.ViewModels.DeveloperUserViewModel
+
+@{
+    ViewData["Title"] = "Assign Developer";
+}
+
+<h1>Assign Developer To Ticket(s)</h1>
+
+<div>
+    <h4>Ticket</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Ticket!.Title)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Ticket!.Title)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Ticket!.Description)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Ticket!.Description)
+        </dd>
+        @*<dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Ticket!.Created)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Ticket!.Created)
+        </dd>*@
+        @*<dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Ticket!.TicketPriority)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Ticket!.TicketPriority!.Name)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Ticket!.TicketStatus)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Ticket!.TicketStatus!.Name)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Ticket!.TicketType)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Ticket!.TicketType!.Name)
+        </dd>*@
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Ticket!.SubmitterUser)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Ticket!.SubmitterUser!.FullName)
+        </dd>
+    </dl>
+    
+    <form asp-action="AssignDeveloperUser" enctype="multipart/form-data">
+        <input type="hidden" asp-for="Ticket!.Id" />
+        <input type="hidden" asp-for="Ticket!.Title" />
+        <input type="hidden" asp-for="Ticket!.Created" />
+        <input type="hidden" asp-for="Ticket!.Description" />
+        <input type="hidden" asp-for="Ticket!.SubmitterUserId" />
+        <input type="hidden" asp-for="Ticket!.ProjectId" />
+        <input type="hidden" asp-for="Ticket!.TicketPriorityId" />
+        <input type="hidden" asp-for="Ticket!.TicketStatusId" />
+        <input type="hidden" asp-for="Ticket!.TicketTypeId" />
+        <input type="hidden" asp-for="Ticket!.Archived" />
+        <input type="hidden" asp-for="Ticket!.ArchivedByProject" />
+
+        @if (User.IsInRole(nameof(BTRoles.Admin)) || User.IsInRole(nameof(BTRoles.ProjectManager)))
+            {
+                <div class="form-group">
+                    <label class="control-label">Developer</label>
+                    <select asp-for="DeveloperId" class="form-control" asp-items="@Model.Developers">
+                        <option></option>
+                    </select>
+                </div>
+            }
+        <input type="submit" value="Assign Developer" class="btn btn-danger" /> |
+        <a asp-action="Index">Back to List</a>
+    </form>
+</div>

@@ -1,5 +1,6 @@
 ﻿using BugTracker.Data;
 using BugTracker.Models;
+using BugTracker.Models.Enums;
 using BugTracker.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,10 +9,14 @@ namespace BugTracker.Services
     public class BTTicketService : IBTTicketService
     {
         private readonly ApplicationDbContext _context;
+        private readonly IBTRolesService _rolesService;
+        private readonly IBTProjectService _projectService;
 
-        public BTTicketService(ApplicationDbContext context)
+        public BTTicketService(ApplicationDbContext context, IBTRolesService rolesService, IBTProjectService projectService)
         {
             _context = context;
+            _rolesService = rolesService;
+            _projectService = projectService;
         }
 
         #region Add New Ticket
@@ -21,6 +26,31 @@ namespace BugTracker.Services
             {
                 _context.Add(ticket);
                 await _context.SaveChangesAsync();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        #endregion
+
+        #region Get Unassigned Tickets
+        public async Task<List<Ticket>> GetUnassignedTicketsAsync(int companyId)
+        {
+
+            try
+            {
+                List<Ticket> tickets = await GetAllTicketsByCompanyIdAsync(companyId);
+
+                foreach (Ticket ticket in tickets)
+                {
+                    if (ticket.DeveloperUserId != null)
+                    {
+                        tickets.Remove(ticket);
+                    }
+                }
+
+                return tickets;
             }
             catch (Exception)
             {
@@ -44,6 +74,52 @@ namespace BugTracker.Services
         }
         #endregion
 
+        #region Restore Ticket
+        public async Task RestoreTicketAsync(Ticket ticket)
+        {
+            try
+            {
+                ticket.Archived = false;
+                await UpdateTicketAsync(ticket);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        #endregion
+
+        #region Get Archived Tickets By Company
+        public async Task<List<Ticket>> GetArchivedTicketsByCompanyIdAsync(int companyId)
+        {
+            try
+            {
+                List<Ticket> archivedTickets = new List<Ticket>();
+
+                archivedTickets = await _context.Tickets
+                                                 .Where(p => p.Archived == true)
+                                                    .Include(t => t.Comments)
+                                                    .Include(t => t.DeveloperUser)
+                                                    .Include(t => t.History)
+                                                    .Include(t => t.SubmitterUser)
+                                                    .Include(t => t.TicketPriority)
+                                                    .Include(t => t.TicketStatus)
+                                                    .Include(t => t.TicketType)
+                                                    .Include(t => t.Project)
+                                                    .ThenInclude(c => c!.Company)
+                                                    .Where(t => t.Project!.CompanyId == companyId)
+                                                    .ToListAsync();
+
+                return archivedTickets;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+        #endregion
+
         #region Get All Tickets By Company Id
         public async Task<List<Ticket>> GetAllTicketsByCompanyIdAsync(int companyId)
         {
@@ -60,11 +136,55 @@ namespace BugTracker.Services
                                 .Include(t => t.TicketStatus)
                                 .Include(t => t.TicketType)
                                 .Include(t => t.Project)
+                                .Where(t => t.Archived == false)
                                 .ToListAsync();
-                                    
+
 
             return tickets;
         }
+        #endregion
+
+        #region Get Tickets By User Id
+        public async Task<List<Ticket>> GetTicketsByUserIdAsync(string userId, int companyId)
+        {
+            BTUser? btUser = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
+            List<Ticket>? tickets = new();
+
+            try
+            {
+                if (await _rolesService.IsUserInRoleAsync(btUser!, nameof(BTRoles.Admin)))
+                {
+                    tickets = (await _projectService.GetAllProjectsByCompanyIdAsync(companyId))
+                                                    .SelectMany(p => p.Tickets!).ToList();
+                }
+                else if (await _rolesService.IsUserInRoleAsync(btUser!, nameof(BTRoles.Developer)))
+                {
+                    tickets = (await _projectService.GetAllProjectsByCompanyIdAsync(companyId))
+                                                    .SelectMany(p => p.Tickets!)
+                                                    .Where(t => t.DeveloperUserId == userId || t.SubmitterUserId == userId).ToList();
+                }
+                else if (await _rolesService.IsUserInRoleAsync(btUser!, nameof(BTRoles.Submitter)))
+                {
+                    tickets = (await _projectService.GetAllProjectsByCompanyIdAsync(companyId))
+                                                    .SelectMany(t => t.Tickets!).Where(t => t.SubmitterUserId == userId).ToList();
+                }
+                else if (await _rolesService.IsUserInRoleAsync(btUser!, nameof(BTRoles.ProjectManager)))
+                {
+                    List<Ticket>? projectTickets = (await _projectService.GetUserProjectsAsync(userId)).SelectMany(t => t.Tickets!).ToList();
+                    List<Ticket>? submittedTickets = (await _projectService.GetAllProjectsByCompanyIdAsync(companyId))
+                                                    .SelectMany(p => p.Tickets!).Where(t => t.SubmitterUserId == userId).ToList();
+                    tickets = projectTickets.Concat(submittedTickets).ToList();
+                }
+
+                return tickets;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
         #endregion
 
         #region Update Ticket

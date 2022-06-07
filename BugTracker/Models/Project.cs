@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using BugTracker.Extensions;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -41,6 +42,7 @@ namespace BugTracker.Models
 
         [NotMapped]
         [DataType(DataType.Upload)]
+        [MaxFileSize(1024 * 1024)]
         public IFormFile? ImageFormFile { get; set; }
 
 

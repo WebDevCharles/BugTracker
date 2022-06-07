@@ -1,14 +1,11 @@
 ﻿@model IEnumerable<BugTracker.Models.Ticket>
 
 @{
-    ViewData["Title"] = "My Tickets";
+    ViewData["Title"] = "Unassigned Tickets";
 }
 
-<h1>Index</h1>
+<h1>Unassigned Tickets</h1>
 
-<p>
-    <a asp-action="Create">Create New Ticket</a>
-</p>
 <table class="table">
     <thead>
         <tr>
@@ -85,18 +82,16 @@
                 @Html.DisplayFor(modelItem => item.TicketType.Name)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.SubmitterUser.FullName)
+                @Html.DisplayFor(modelItem => item.SubmitterUser.Id)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.DeveloperUser.FullName)
+                @Html.DisplayFor(modelItem => item.DeveloperUser.Id)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
                 <a asp-action="Archive" asp-route-id="@item.Id">Archive</a> |
-                <a asp-action="MyTickets" asp-route-id="@item.Id">My Tickets</a> |
-                <a asp-action="AllTickets" asp-route-id="@item.Id">All Tickets</a> |
-                <a asp-action="AssignDeveloperUser" asp-route-id="@item.Id">Assign Developer</a>
+                <a asp-action="AllTickets" asp-route-id="@item.Id">All Tickets</a>
             </td>
         </tr>
 }
