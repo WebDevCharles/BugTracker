@@ -439,6 +439,7 @@ namespace BugTracker.Services
             {
                 projects = await _context.Projects
                                          .Include(p => p.ProjectPriority)
+                                         .Include(p => p.Members)
                                          .Where(p => p.CompanyId == companyId).ToListAsync();
                 foreach (Project project in projects)
                 {

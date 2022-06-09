@@ -155,24 +155,34 @@ namespace BugTracker.Services
                 if (await _rolesService.IsUserInRoleAsync(btUser!, nameof(BTRoles.Admin)))
                 {
                     tickets = (await _projectService.GetAllProjectsByCompanyIdAsync(companyId))
-                                                    .SelectMany(p => p.Tickets!).ToList();
+                                                    .SelectMany(p => p.Tickets!)
+                                                    .Where(p => p.Archived == false)
+                                                    .ToList();
                 }
                 else if (await _rolesService.IsUserInRoleAsync(btUser!, nameof(BTRoles.Developer)))
                 {
                     tickets = (await _projectService.GetAllProjectsByCompanyIdAsync(companyId))
                                                     .SelectMany(p => p.Tickets!)
-                                                    .Where(t => t.DeveloperUserId == userId || t.SubmitterUserId == userId).ToList();
+                                                    .Where(p => p.Archived == false)
+                                                    .Where(t => t.DeveloperUserId == userId || t.SubmitterUserId == userId)
+                                                    .ToList();
                 }
                 else if (await _rolesService.IsUserInRoleAsync(btUser!, nameof(BTRoles.Submitter)))
                 {
                     tickets = (await _projectService.GetAllProjectsByCompanyIdAsync(companyId))
-                                                    .SelectMany(t => t.Tickets!).Where(t => t.SubmitterUserId == userId).ToList();
+                                                    .SelectMany(t => t.Tickets!)
+                                                    .Where(p => p.Archived == false)
+                                                    .Where(t => t.SubmitterUserId == userId)
+                                                    .ToList();
                 }
                 else if (await _rolesService.IsUserInRoleAsync(btUser!, nameof(BTRoles.ProjectManager)))
                 {
                     List<Ticket>? projectTickets = (await _projectService.GetUserProjectsAsync(userId)).SelectMany(t => t.Tickets!).ToList();
                     List<Ticket>? submittedTickets = (await _projectService.GetAllProjectsByCompanyIdAsync(companyId))
-                                                    .SelectMany(p => p.Tickets!).Where(t => t.SubmitterUserId == userId).ToList();
+                                                    .SelectMany(p => p.Tickets!)
+                                                    .Where(p => p.Archived == false)
+                                                    .Where(t => t.SubmitterUserId == userId)
+                                                    .ToList();
                     tickets = projectTickets.Concat(submittedTickets).ToList();
                 }
 
@@ -220,10 +230,26 @@ namespace BugTracker.Services
                                         .Include(t => t.History)
                                         .FirstOrDefaultAsync(t => t.Id == id);
 
-                return ticket;
+                return ticket!;
             }
             catch (Exception)
             {
+                throw;
+            }
+        }
+        #endregion
+
+        #region Add Ticket Attachment
+        public async Task AddTicketAttachmentAsync(TicketAttachment ticketAttachment)
+        {
+            try
+            {
+                await _context.AddAsync(ticketAttachment);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception)
+            {
+
                 throw;
             }
         }

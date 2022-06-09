@@ -62,6 +62,8 @@ namespace BugTracker.Models
 
         // Navigational Properties
         public virtual Company? Company { get; set; }
+
+        [DisplayName("Priority")]
         public virtual ProjectPriority? ProjectPriority { get; set; }
 
 

@@ -13,5 +13,6 @@ namespace BugTracker.Services.Interfaces
         public Task<List<Ticket>> GetUnassignedTicketsAsync(int companyId);
         public Task UpdateTicketAsync(Ticket ticket);
         public Task<Ticket> GetTicketByIdAsync(int id);
+        public Task AddTicketAttachmentAsync(TicketAttachment ticketAttachment);
     }
 }

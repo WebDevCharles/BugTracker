@@ -43,11 +43,22 @@ namespace BugTracker.Controllers
         }
 
         // GET: Projects
-        [Authorize]
-        public async Task<IActionResult> Index()
+        [HttpGet]
+        public async Task<IActionResult> AllProjects()
         {
             int companyId = User.Identity!.GetCompanyId();
+
             List<Project> projects = await _projectService.GetAllProjectsByCompanyIdAsync(companyId);
+
+            return View(projects);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> MyProjects()
+        {
+            string userId = _userManager.GetUserId(User);
+
+            List<Project> projects = await _projectService.GetUserProjectsAsync(userId);
 
             return View(projects);
         }
@@ -96,27 +107,29 @@ namespace BugTracker.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> AssignProjectMembers(ProjectMembersViewModel model)
         {
-            if(model.SelectedUsers != null)
+            if (ModelState.IsValid)
             {
-                List<string> memberIds = (await _projectService.GetAllProjectMembersExceptPMAsync(model.Project!.Id)).Select(m => m.Id).ToList();
-
-                // Remove current members
-                foreach(string member in memberIds)
+                if (model.SelectedUsers != null)
                 {
-                    await _projectService.RemoveUserFromProjectAsync(member, model.Project.Id);
+                    List<string> memberIds = (await _projectService.GetAllProjectMembersExceptPMAsync(model.Project!.Id)).Select(m => m.Id).ToList();
+
+                    // Remove current members
+                    foreach (string member in memberIds)
+                    {
+                        await _projectService.RemoveUserFromProjectAsync(member, model.Project.Id);
+                    }
+
+                    // Add selected members
+                    foreach (string member in model.SelectedUsers)
+                    {
+                        await _projectService.AddUserToProjectAsync(member, model.Project.Id);
+                    }
+
+                    return RedirectToAction(nameof(Details), new { id = model.Project!.Id });
+
                 }
-
-                // Add selected members
-                foreach(string member in model.SelectedUsers)
-                {
-                    await _projectService.AddUserToProjectAsync(member, model.Project.Id);
-                }
-
-                return RedirectToAction(nameof(Details), new { id = model.Project!.Id });
-
             }
-
-            return RedirectToAction(nameof(AssignProjectMembers), new { id = model.Project!.Id });
+            return RedirectToAction(nameof(Details), new { id = model.Project!.Id });
         }
 
 
@@ -184,7 +197,7 @@ namespace BugTracker.Controllers
                     await _projectService.AddProjectManagerAsync(model.PMID, model.Project.Id);
                 }
 
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(AllProjects));
             }
 
             int companyId = User.Identity!.GetCompanyId();
@@ -277,7 +290,7 @@ namespace BugTracker.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(AllProjects));
             }
 
             int companyId = User.Identity!.GetCompanyId();
@@ -298,23 +311,6 @@ namespace BugTracker.Controllers
 
             return View(model.Project);
         }
-
-        //[Authorize(Roles = "Admin,ProjectManager")]
-        //[HttpGet]
-        //public async Task<IActionResult> AllProjects()
-        //{
-        //    int companyId = User.Identity!.GetCompanyId();
-        //    var members = await _bTCompanyInfoService.GetAllMembersAsync(companyId);
-        //    var projects = await _projectService.GetAllProjectsByCompanyIdAsync(companyId);
-        //    var tickets = await _ticketService.GetAllTicketsByCompanyIdAsync(companyId);
-        //    var model = new DashboardViewModel()
-        //    {
-        //        Tickets = tickets,
-        //        Projects = projects,
-        //        Users = members,
-        //    };
-        //    return View(model);
-        //}
 
         [Authorize(Roles = "Admin")]
         [HttpGet]
@@ -377,7 +373,7 @@ namespace BugTracker.Controllers
                     //_context.Update(project);
                     await _projectService.UpdateProjectAsync(model.Project);
 
-                    if (string.IsNullOrEmpty(model.PMID))
+                    if (!string.IsNullOrEmpty(model.PMID))
                     {
                         await _projectService.AddProjectManagerAsync(model.PMID!, model.Project.Id);
                     }
@@ -393,7 +389,7 @@ namespace BugTracker.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(AllProjects));
             }
 
             int companyId = User.Identity!.GetCompanyId();
@@ -460,7 +456,7 @@ namespace BugTracker.Controllers
                 await _projectService.RestoreProjectAsync(project);
             }
 
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(AllProjects));
         }
 
         // GET: Projects/Delete/5
@@ -500,7 +496,7 @@ namespace BugTracker.Controllers
                 await _projectService.ArchiveProjectAsync(project);
             }
 
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(AllProjects));
         }
 
         private bool ProjectExists(int id)

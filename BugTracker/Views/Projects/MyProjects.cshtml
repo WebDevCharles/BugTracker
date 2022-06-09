@@ -1,0 +1,119 @@
+﻿@using BugTracker.Models.Enums
+@using BugTracker.Services.Interfaces
+@model IEnumerable<BugTracker.Models.Project>
+
+@inject IBTProjectService projectService
+@{
+    ViewData["Title"] = "My Projects";
+}
+
+<h1>My Projects</h1>
+
+@if (User.IsInRole(nameof(BTRoles.Admin)) || User.IsInRole(nameof(BTRoles.ProjectManager)))
+{
+    <p>
+        <a asp-action="Create">Create New</a>
+    </p>
+}
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Created)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StartDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EndDate)
+            </th>
+            @*<th>
+            @Html.DisplayNameFor(model => model.ImageFileName)
+            </th>*@
+            <th>
+                @Html.DisplayNameFor(model => model.ImageFileData)
+            </th>
+            @*<th>
+            @Html.DisplayNameFor(model => model.ImageContentType)
+            </th>*@
+            <th>
+                @Html.DisplayNameFor(model => model.Archived)
+            </th>
+            <th>
+                Project Manager
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Company)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProjectPriority)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Created)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.StartDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EndDate)
+                </td>
+                @*<td>
+            @Html.DisplayFor(modelItem => item.ImageFileName)
+            </td>*@
+                <td>
+                    @if (item.ImageFileData != null)
+                    {
+                        <img class="" src="data:image/*;base64,@(Convert.ToBase64String(item.ImageFileData))" alt="" style="width:100px;height:100px" />
+                    }
+                </td>
+                @*<td>
+            @Html.DisplayFor(modelItem => item.ImageContentType)
+            </td>*@
+                <td>
+                    @Html.DisplayFor(modelItem => item.Archived)
+                </td>
+                <td>
+                    @if (User.IsInRole(nameof(BTRoles.Admin)))
+                    {
+                        @((await projectService.GetProjectManagerAsync(item.Id))?.FullName)
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Company.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ProjectPriority.Name)
+                </td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    @if (User.IsInRole(nameof(BTRoles.Admin)) || User.IsInRole(nameof(BTRoles.ProjectManager)))
+                    {
+                        <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> <span> | </span>
+                        <a asp-action="Archive" asp-route-id="@item.Id"> Archive </a> <span> | </span>
+                        <a asp-action="AssignProjectMembers" asp-route-id="@item.Id">Manage Team</a> <span> | </span>
+                        <a asp-action="AssignProjectManager" asp-route-id="@item.Id">Assign Project Manager</a>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

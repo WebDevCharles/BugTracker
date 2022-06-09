@@ -2,6 +2,38 @@
 
 namespace BugTracker.Extensions
 {
+    public class MaxFileSizeAttribute : ValidationAttribute
+    {
+        private readonly int _maxFileSize;
+        public MaxFileSizeAttribute(int maxFileSize)
+        {
+            _maxFileSize = maxFileSize;
+        }
+
+
+        protected override ValidationResult IsValid(
+        object value, ValidationContext validationContext)
+        {
+            var file = value as IFormFile;
+            if (file != null)
+            {
+                if (file.Length > _maxFileSize)
+                {
+                    return new ValidationResult(GetErrorMessage());
+                }
+            }
+
+
+            return ValidationResult.Success;
+        }
+
+
+        public string GetErrorMessage()
+        {
+            return $"Maximum allowed file size is {_maxFileSize} bytes.";
+        }
+    }
+
     public class AllowedExtensionsAttribute : ValidationAttribute
     {
         private readonly string[] _extensions;
@@ -10,7 +42,9 @@ namespace BugTracker.Extensions
             _extensions = extensions;
         }
 
-        protected override ValidationResult IsValid(object? value, ValidationContext validationContext)
+
+        protected override ValidationResult IsValid(
+        object value, ValidationContext validationContext)
         {
             var file = value as IFormFile;
             if (file != null)
@@ -22,39 +56,14 @@ namespace BugTracker.Extensions
                 }
             }
 
-            return ValidationResult.Success!;
+
+            return ValidationResult.Success;
         }
+
 
         public string GetErrorMessage(string ext)
         {
             return $"The file extension {ext} is not allowed!";
-        }
-    }
-    public class MaxFileSizeAttribute : ValidationAttribute
-    {
-        private readonly int _maxFileSize;
-        public MaxFileSizeAttribute(int maxFileSize)
-        {
-            _maxFileSize = maxFileSize;
-        }
-
-        protected override ValidationResult IsValid(object? value, ValidationContext validationContext)
-        {
-            var file = value as IFormFile;
-            if (file != null)
-            {
-                if (file.Length > _maxFileSize)
-                {
-                    return new ValidationResult(GetErrorMessage());
-                }
-            }
-
-            return ValidationResult.Success!;
-        }
-
-        public string GetErrorMessage()
-        {
-            return $"Maximum allowed file size is {_maxFileSize} bytes.";
         }
     }
 }
