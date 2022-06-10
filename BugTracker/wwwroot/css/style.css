@@ -17,7 +17,7 @@ Version:    1.0
     => (includes the styles of all the dashboard widgets)
 06. CSS Compiled From "sidebar-nav.less" 
     => (includes the styles of sidebar navigation)
-07. Simple Line Icons
+07. Simple Line Iconsicon-
 08. Themify Icons
 09. Font Awesome Icons
 10. CSS Compiled From "pages.less" 
@@ -4332,7 +4332,7 @@ table.focus-on tbody tr.focused th {
 }
 
 .login-register {
-    background: url(../../plugins/images/login-register.jpg) center center/cover no-repeat!important;
+    background: url(../images/login-register.jpg) center center/cover no-repeat!important;
     height: 100%;
     position: fixed
 }

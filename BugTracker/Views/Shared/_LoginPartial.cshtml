@@ -5,12 +5,17 @@
     BTUser btUser = await UserManager.GetUserAsync(User);
 }
 
-<div class="dropdown py-sm-4 ms-auto ms-sm-0 flex-shrink-1">
-
     @if (SignInManager.IsSignedIn(User))
     {
-        <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
-            <img src="https://cdn.icon-icons.com/icons2/1378/PNG/512/avatardefault_92824.png" alt="" width="28" height="28" class="rounded-circle">
+        <li class="ms-0">
+            <a class="waves-effect" href="javascript:void(0);" aria-expanded="false"><i class="icon-compass fa-fw ms-1"></i> <span class="hide-menu">Profile</span></a>
+            <ul aria-expanded="false" class="collapse">
+                <li><a class="dropdown-item" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Manage Account</a></li>
+                <li><a class="dropdown-item" href="javascript:document.getElementById('logoutForm').submit();">Sign out</a></li>
+            </ul>
+        </li>
+        @*<a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+            <img src="https://cdn.icon-icons.com/icons2/1378/PNG/512/avatardefault_92824.png" alt="" width="50" height="50" class="rounded-circle">
             <span class="d-none d-sm-inline mx-1">@btUser.FirstName</span>
         </a>
         <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
@@ -19,12 +24,20 @@
                 <hr class="dropdown-divider">
             </li>
             <li><a class="dropdown-item" href="javascript:document.getElementById('logoutForm').submit();">Sign out</a></li>
-        </ul>
+        </ul>*@
 
     }
     else
     {
-        <a asp-area="Identity" asp-page="/Account/Login" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+        <li>
+            <a class="active waves-effect" href="javascript:void(0);" aria-expanded="false"><i class="icon-compass fa-fw"></i> <span class="hide-menu">Profile</span></a>
+            <ul aria-expanded="false" class="collapse">
+                <li><a class="dropdown-item" asp-area="Identity" asp-page="/Account/Register">Register</a></li>
+                <li><a class="dropdown-item" asp-area="Identity" asp-page="/Account/Login">Sign In</a></li>
+            </ul>
+        </li>
+
+        @*<a asp-area="Identity" asp-page="/Account/Login" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
             <img src="https://cdn.icon-icons.com/icons2/1378/PNG/512/avatardefault_92824.png" alt="" width="28" height="28" class="rounded-circle">
             <span class="d-none d-sm-inline mx-1">Log In</span>
         </a>
@@ -34,8 +47,7 @@
                 <hr class="dropdown-divider">
             </li>
             <li><a class="dropdown-item" asp-area="Identity" asp-page="/Account/Login">Sign In</a></li>
-        </ul>
+        </ul>*@
     }
-</div>
 <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
 </form>

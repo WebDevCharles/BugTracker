@@ -151,7 +151,7 @@ namespace BugTracker.Services
                                                  .Include(p => p.Members)
                                                  .FirstOrDefaultAsync(p => p.Id == projectId);
 
-                foreach (BTUser member in project?.Members!)
+                foreach (BTUser member in project.Members)
                 {
                     if (await _rolesService.IsUserInRoleAsync(member, nameof(BTRoles.ProjectManager)))
                     {

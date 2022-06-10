@@ -21,7 +21,12 @@ namespace BugTracker.Controllers
         private readonly IBTRolesService _rolesService;
         private readonly IBTFileService _fileService;
 
-        public TicketsController(ApplicationDbContext context, UserManager<BTUser> userManager, IBTTicketService ticketService, IBTProjectService projectService, IBTRolesService rolesService, IBTFileService fileService)
+        public TicketsController(ApplicationDbContext context,
+                                        UserManager<BTUser> userManager,
+                                        IBTTicketService ticketService,
+                                        IBTProjectService projectService,
+                                        IBTRolesService rolesService,
+                                        IBTFileService fileService)
         {
             _context = context;
             _ticketService = ticketService;
@@ -273,7 +278,7 @@ namespace BugTracker.Controllers
                 return NotFound();
             }
 
-            if(ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 try
                 {

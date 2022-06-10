@@ -128,6 +128,7 @@ namespace BugTracker.Services
             tickets = await _context.Projects
                             .Where(p => p.CompanyId == companyId)
                             .SelectMany(p => p.Tickets)
+                                .Include(t => t.Attachments)
                                 .Include(t => t.Comments)
                                 .Include(t => t.DeveloperUser)
                                 .Include(t => t.History)

@@ -9,7 +9,7 @@ namespace BugTracker.Models
         public int Id { get; set; }
 
         [DisplayName("Updated Ticket Property")]
-        public string? PropertyName { get; set; }
+        public string? Property { get; set; }
 
         [DisplayName("Description Of Change(s)")]
         public string? Description { get; set; }
