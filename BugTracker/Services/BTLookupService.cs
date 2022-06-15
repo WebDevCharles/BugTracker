@@ -82,6 +82,21 @@ namespace BugTracker.Services
             }
         }
 
-        #endregion    
+        #endregion
+
+        #region Lookup Notification Type Id
+        public async Task<int?> LookupNotificationTypeIdAsync(string typeName)
+        {
+            try
+            {
+                NotificationType? notificationType = await _context.NotificationTypes.FirstOrDefaultAsync(n => n.Name == typeName);
+                return notificationType!.Id;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        #endregion
     }
 }

@@ -40,8 +40,8 @@ namespace BugTracker.Services
             try
             {
                 List<Notification> notifications = await _context.Notifications
-                                                                 .Include(n => n.RecipientId)
-                                                                 .Include(n => n.SenderId)
+                                                                 .Include(n => n.Recipient)
+                                                                 .Include(n => n.Sender)
                                                                  .Include(n => n.Ticket)
                                                                     .ThenInclude(t => t!.Project)
                                                                  .Where(n => n.RecipientId == userId).ToListAsync();
@@ -59,8 +59,8 @@ namespace BugTracker.Services
             try
             {
                 List<Notification> notifications = await _context.Notifications
-                                                                 .Include(n => n.RecipientId)
-                                                                 .Include(n => n.SenderId)
+                                                                 .Include(n => n.Recipient)
+                                                                 .Include(n => n.Sender)
                                                                  .Include(n => n.Ticket)
                                                                     .ThenInclude(t => t!.Project)
                                                                  .Where(n => n.SenderId == userId).ToListAsync();

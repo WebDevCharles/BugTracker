@@ -61,8 +61,8 @@ Version:    1.0
 ============================================================ */
 
 @import url(https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i);
-@import "~/less/icons/material-design-iconic-font/css/materialdesignicons.min.css";
-@import "~/css/spinners.css";
+@import "/less/icons/material-design-iconic-font/css/materialdesignicons.min.css";
+@import "./spinners.css";
 
 .preloader {
     width: 100%;
@@ -16126,4 +16126,8 @@ ul.pro-amenities li span i {
     .numbered-bg .step-title {
         padding-right: 0
     }
+}
+
+#dropInfo {
+    font-size: 16px;
 }

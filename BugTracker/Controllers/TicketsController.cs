@@ -20,13 +20,19 @@ namespace BugTracker.Controllers
         private readonly IBTProjectService _projectService;
         private readonly IBTRolesService _rolesService;
         private readonly IBTFileService _fileService;
+        private readonly IBTTicketHistoryService _ticketHistoryService;
+        private readonly IBTNotificationService _notificationService;
+        private readonly IBTLookupService _lookupService;
 
         public TicketsController(ApplicationDbContext context,
                                         UserManager<BTUser> userManager,
                                         IBTTicketService ticketService,
                                         IBTProjectService projectService,
                                         IBTRolesService rolesService,
-                                        IBTFileService fileService)
+                                        IBTFileService fileService,
+                                        IBTTicketHistoryService ticketHistoryService,
+                                        IBTNotificationService notificationService,
+                                        IBTLookupService lookupService)
         {
             _context = context;
             _ticketService = ticketService;
@@ -34,6 +40,9 @@ namespace BugTracker.Controllers
             _projectService = projectService;
             _rolesService = rolesService;
             _fileService = fileService;
+            _ticketHistoryService = ticketHistoryService;
+            _notificationService = notificationService;
+            _lookupService = lookupService;
         }
         [Authorize]
         [HttpGet]
@@ -70,7 +79,7 @@ namespace BugTracker.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddTicketAttachment([Bind("Id,FormFile,Description,TicketId")] TicketAttachment ticketAttachment)
+        public async Task<IActionResult> AddTicketAttachment([Bind("Id,FormFile,UserId,Description,TicketId")] TicketAttachment ticketAttachment)
         {
             string statusMessage;
 
@@ -113,6 +122,17 @@ namespace BugTracker.Controllers
             return View(ticket);
         }
 
+        public IActionResult ShowFile(int id)
+        {
+            TicketAttachment? ticketAttachment = _context.TicketAttachments.Find(id);
+            string? fileName = ticketAttachment!.FileName;
+            byte[]? fileData = ticketAttachment.FileData;
+            string ext = Path.GetExtension(fileName)!.Replace(".", "");
+
+            Response.Headers.Add("Content-Disposition", $"inline; filename={fileName}");
+            return File(fileData!, $"application/{ext}");
+        }
+
         // GET: Tickets/Create
         public async Task<IActionResult> Create()
         {
@@ -140,6 +160,8 @@ namespace BugTracker.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Title,Description,ProjectId,TicketTypeId,TicketPriorityId")] Ticket ticket)
         {
+            int companyId = User.Identity!.GetCompanyId();
+            string userId = _userManager.GetUserId(User);
 
             ModelState.Remove("SubmitterUserId");
 
@@ -151,16 +173,40 @@ namespace BugTracker.Controllers
 
                 await _ticketService.AddNewTicketAsync(ticket);
 
-                // TODO: Add Ticket History
+                // Adds A Ticket History
+                Ticket newTicket = await _ticketService.GetTicketAsNoTrackingAsync(ticket.Id);
+                await _ticketHistoryService.AddHistoryAsync(null!, newTicket, ticket.SubmitterUserId);
 
                 // TODO: Add Ticket Notification
+                BTUser btUser = await _userManager.GetUserAsync(User);
+                BTUser projectManager = await _projectService.GetProjectManagerAsync(ticket.ProjectId);
+
+                Notification notification = new()
+                {
+                    NotificationTypeId = (await _lookupService.LookupNotificationTypeIdAsync(nameof(BTNotificationTypes.Ticket))).Value,
+                    TicketId = ticket.Id,
+                    Title = "New Ticket Added",
+                    Message = $"New Ticket: {ticket.Title}, was created by {btUser.FullName}",
+                    Created = DateTime.UtcNow,
+                    SenderId = btUser.Id,
+                    RecipientId = projectManager?.Id
+                };
+
+                await _notificationService.AddNotificationAsync(notification);
+
+
+                if (projectManager != null)
+                {
+                    await _notificationService.SendEmailNotificationAsync(notification, $"New Ticket Added For Project: {newTicket.Project!.Name}");
+                }
+                else
+                {
+                    await _notificationService.SendEmailNotificationsByRoleAsync(notification, companyId, nameof(BTRoles.Admin));
+                }
 
 
                 return RedirectToAction(nameof(Index));
             }
-
-            int companyId = User.Identity!.GetCompanyId();
-            string userId = _userManager.GetUserId(User);
 
             if (User.IsInRole(nameof(BTRoles.Admin)))
             {
@@ -211,6 +257,9 @@ namespace BugTracker.Controllers
 
             if (ModelState.IsValid)
             {
+                string userId = _userManager.GetUserId(User);
+                Ticket oldTicket = await _ticketService.GetTicketAsNoTrackingAsync(ticket.Id);
+
                 try
                 {
                     ticket.Created = DateTime.SpecifyKind(ticket.Created, DateTimeKind.Utc);
@@ -232,6 +281,11 @@ namespace BugTracker.Controllers
                         throw;
                     }
                 }
+
+                // Adds History
+                Ticket newTicket = await _ticketService.GetTicketAsNoTrackingAsync(ticket.Id);
+                await _ticketHistoryService.AddHistoryAsync(oldTicket, newTicket, userId);
+
                 return RedirectToAction(nameof(Index));
             }
 
@@ -280,6 +334,11 @@ namespace BugTracker.Controllers
 
             if (ModelState.IsValid)
             {
+
+                BTUser btUser = await _userManager.GetUserAsync(User);
+                // OldTicket
+                Ticket oldTicket = await _ticketService.GetTicketAsNoTrackingAsync(model.Ticket!.Id);
+
                 try
                 {
                     model.Ticket.Created = DateTime.SpecifyKind(model.Ticket.Created, DateTimeKind.Utc);
@@ -296,8 +355,31 @@ namespace BugTracker.Controllers
 
                     throw;
                 }
-                return RedirectToAction("Details", "Tickets", new { model.Ticket.Id });
 
+                // NewTicket
+                Ticket newTicket = await _ticketService.GetTicketAsNoTrackingAsync(model.Ticket.Id);
+                // Add History
+                await _ticketHistoryService.AddHistoryAsync(oldTicket, newTicket, btUser.Id);
+
+                // Send Notifications To Developer
+                if (model.Ticket.DeveloperUserId != null)
+                {
+                    Notification devNotification = new()
+                    {
+                        TicketId = model.Ticket.Id,
+                        NotificationTypeId = (await _lookupService.LookupNotificationTypeIdAsync(nameof(BTNotificationTypes.Ticket))).Value,
+                        Title = "Ticket Updated",
+                        Message = $"Ticket: {model.Ticket.Title}, was updated by {btUser.FullName}",
+                        Created = DateTime.UtcNow,
+                        SenderId = btUser.Id,
+                        RecipientId = model.Ticket.DeveloperUserId
+                    };
+                    await _notificationService.AddNotificationAsync(devNotification);
+                    await _notificationService.SendEmailNotificationAsync(devNotification, "Ticket Updated");
+
+                    return RedirectToAction("Details", "Tickets", new { model.Ticket.Id });
+
+                }
             }
             int companyId = User.Identity!.GetCompanyId();
             Ticket? ticket = await _ticketService.GetTicketByIdAsync(model.Ticket.Id);
@@ -306,7 +388,9 @@ namespace BugTracker.Controllers
 
             model.Developers = new SelectList(await _rolesService.GetUsersInRoleAsync(nameof(BTRoles.Developer), companyId), "Id", "FullName");
             return View(model);
+
         }
+
 
         public async Task<IActionResult> Restore(int? id)
         {
@@ -381,15 +465,14 @@ namespace BugTracker.Controllers
             {
                 return Problem("Entity set 'ApplicationDbContext.Tickets' is null.");
             }
-            Ticket ticket = await _ticketService.GetTicketByIdAsync(id);
+            Ticket? ticket = await _context.Tickets.FindAsync(id);
 
             if (ticket != null)
             {
                 await _ticketService.ArchiveTicketAsync(ticket);
             }
 
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(AllTickets));
+            return RedirectToAction(nameof(ArchivedTickets));
         }
 
         private bool TicketExists(int id)

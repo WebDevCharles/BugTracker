@@ -1,5 +1,7 @@
 ﻿using BugTracker.Extensions;
 using BugTracker.Models;
+using BugTracker.Models.ChartModels;
+using BugTracker.Models.Enums;
 using BugTracker.Models.ViewModels;
 using BugTracker.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -33,7 +35,7 @@ namespace BugTracker.Controllers
             _rolesService = rolesService;
         }
 
-        public IActionResult Index()
+        public IActionResult LandingPage()
         {
             return View();
         }
@@ -77,5 +79,43 @@ namespace BugTracker.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
+        [HttpPost]
+        public async Task<JsonResult> PlotlyBarChart()
+        {
+            PlotlyBarData plotlyData = new();
+            List<PlotlyBar> barData = new();
+
+            int companyId = User.Identity!.GetCompanyId();
+
+            List<Project> projects = await _projectService.GetAllProjectsByCompanyIdAsync(companyId);
+
+            //Bar One
+            PlotlyBar barOne = new()
+            {
+                X = projects.Select(p => p.Name).ToArray(),
+                Y = projects.SelectMany(p => p.Tickets).GroupBy(t => t.ProjectId).Select(g => g.Count()).ToArray(),
+                Name = "Tickets",
+                Type = "bar"
+            };
+
+            //Bar Two
+            PlotlyBar barTwo = new()
+            {
+                X = projects.Select(p => p.Name).ToArray(),
+                Y = projects.Select(async p => (await _projectService.GetProjectMembersByRoleAsync(p.Id, nameof(BTRoles.Developer))).Count).Select(c => c.Result).ToArray(),
+                Name = "Developers",
+                Type = "bar"
+            };
+
+            barData.Add(barOne);
+            barData.Add(barTwo);
+
+            plotlyData.Data = barData;
+
+            return Json(plotlyData);
+        }
+
+       
     }
 }

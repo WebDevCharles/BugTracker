@@ -34,6 +34,8 @@ builder.Services.AddScoped<IBTCompanyInfoService, BTCompanyInfoService>();
 builder.Services.AddScoped<IBTTicketHistoryService, BTTicketHistoryService>();
 builder.Services.AddScoped<IBTInviteService, BTInviteService>();
 builder.Services.AddScoped<IEmailSender, BTEmailService>();
+builder.Services.AddScoped<IBTLookupService, BTLookupService>();
+builder.Services.AddScoped<IBTNotificationService, BTNotificationService>();
 
 builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
 
@@ -68,7 +70,7 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Home}/{action=LandingPage}/{id?}");
 app.MapRazorPages();
 
 app.Run();

@@ -4,94 +4,68 @@
     ViewData["Title"] = "Archived Projects";
 }
 
-<h1>Archived Projects</h1>
-
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Created)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.StartDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.EndDate)
-            </th>
-            @*<th>
-            @Html.DisplayNameFor(model => model.ImageFileName)
-            </th>*@
-            <th>
-                @Html.DisplayNameFor(model => model.ImageFileData)
-            </th>
-            @*<th>
-            @Html.DisplayNameFor(model => model.ImageContentType)
-            </th>*@
-            <th>
-                @Html.DisplayNameFor(model => model.Archived)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Company)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ProjectPriority)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Description)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Created)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.StartDate)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.EndDate)
-                </td>
-                @*<td>
-            @Html.DisplayFor(modelItem => item.ImageFileName)
-            </td>*@
-                <td>
-                    @if (item.ImageFileData != null)
-                    {
-                        <img class="" src="data:image/*;base64,@(Convert.ToBase64String(item.ImageFileData))" alt="" style="width:100px;height:100px"/>
-                    }
-                </td>
-                @*<td>
-            @Html.DisplayFor(modelItem => item.ImageContentType)
-            </td>*@
-                <td>
-                    @Html.DisplayFor(modelItem => item.Archived)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Company.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ProjectPriority.Name)
-                </td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                    <a asp-action="Restore" asp-route-id="@item.Id">Restore</a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+<div class="container-fluid">
+    <div>
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <div class="card card-line">
+                <div class="white-box" style="border-radius:10px">
+                    <h3 class="card-title text-center"><b>Archived Project List</b></h3>
+                    <div class="card-body p-10">
+                        <div class="table-responsive">
+                            <table id="details-datatable" class="table table-hover card-table table-vcenter text-nowrap mb-0">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Start Date</th>
+                                        <th scope="col">End Date</th>
+                                        <th scope="col">Team</th>
+                                        <th scope="col">Ticket Count</th>
+                                        <th scope="col">Details</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (Project project in Model)
+                                    {
+                                        if (project.Archived == true)
+                                        {
+                                            <tr>
+                                                <th scope="row">
+                                                    @project.Name
+                                                </th>
+                                                <td>
+                                                    @project.StartDate.ToString("MMM dd, yyyy")
+                                                </td>
+                                                <td>
+                                                    @project.EndDate.ToString("MMM dd, yyyy")
+                                                </td>
+                                                <td>
+                                                    <div class="avatar-list avatar-list-stacked">
+                                                        @foreach (BTUser member in project.Members.Cast<BTUser>().Take(6))
+                                                        {
+                                                            <img class="avatar avatar-md brround" src="~/images/users/16.jpg" alt="img">
+                                                        }
+                                                    </div>
+                                                </td>
+                                                <td class="text-center">
+                                                    @project.Tickets.Count
+                                                </td>
+                                                <td class="text-left">
+                                                    <a asp-controller="Projects" asp-action="Details" asp-route-id="@project.Id"><i class="icon-eye"></i></a>
+                                                    @if (User.IsInRole("Admin") || User.IsInRole("ProjectManager"))
+                                                    {
+                                                        <a asp-controller="Projects" asp-action="Edit" asp-route-id="@project.Id"><i class="icon-notebook"></i></a>
+                                                    }
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
