@@ -6,10 +6,11 @@
     Layout = "/Views/Shared/_LoginLayout.cshtml";
 }
 
-<div class="row">
-    <div class="col-10 mx-auto">
-        <section>
-            <form class="mb-5" id="account" method="post">
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-10 mx-auto">
+
+            <form class="" id="account" method="post">
                 <div class="form-group">
                     <div class="row">
                         <div class="col">
@@ -20,39 +21,37 @@
                         </div>
                     </div>
                 </div>
-            </form>
-            <form class="mt-5" id="account" method="post">
-
-                <hr />
-                <div asp-validation-summary="All" class="text-danger"></div>
                 <div class="form-group">
-                    <label asp-for="Input.Email"></label>
-                    <input asp-for="Input.Email" class="form-control" />
-                    <span asp-validation-for="Input.Email" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Input.Password"></label>
-                    <input asp-for="Input.Password" class="form-control" />
-                    <span asp-validation-for="Input.Password" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <div class="checkbox">
-                        <label asp-for="Input.RememberMe">
-                            <input asp-for="Input.RememberMe" />
-                            @Html.DisplayNameFor(m => m.Input.RememberMe)
-                        </label>
+                    <div class="row">
+                        <div class="col">
+                            <input asp-for="Input.Email" placeholder="E-mail" class="form-control" />
+                            <span asp-validation-for="Input.Email" class="text-danger"></span>
+                        </div>
                     </div>
                 </div>
                 <div class="form-group">
-                    <button type="submit" class="btn btn-primary btn-block">Log in</button>
+                    <div class="row">
+                        <div class="col">
+                            <input asp-for="Input.Password" placeholder="Password" class="form-control" />
+                            <span asp-validation-for="Input.Password" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col">
+                            <button type="submit" class="btn-sm btn-primary btn-block">Log in</button>
+                        </div>
+                    </div>
                 </div>
                 <div class="form-group btn-group-sm text-center">
-                    <a type="button" class="btn btn-outline-primary" id="forgot-password" asp-page="./ForgotPassword">Forgot your password?</a>
-                    <a type="button" class="btn btn-outline-primary" asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Register as a new user</a>
-                    <a type="button" class="btn btn-outline-primary" id="resend-confirmation" asp-page="./ResendEmailConfirmation">Resend email confirmation</a>
+                    <a type="button" class="btn btn-outline-primary" id="forgot-password" asp-page="./ForgotPassword">Forgot PW?</a>
+                    <a type="button" class="btn btn-outline-primary" id="resend-confirmation" asp-page="./ResendEmailConfirmation">E-mail Confirmation</a>
+                    <a type="button" class="btn btn-outline-primary" id="register" asp-page="./Register">Register</a>
                 </div>
             </form>
-        </section>
+
+        </div>
     </div>
 </div>
 

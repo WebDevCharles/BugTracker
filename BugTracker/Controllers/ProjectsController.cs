@@ -389,7 +389,7 @@ namespace BugTracker.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(AllProjects));
+                return RedirectToAction(nameof(Details), new { id = model.Project!.Id });
             }
 
             int companyId = User.Identity!.GetCompanyId();

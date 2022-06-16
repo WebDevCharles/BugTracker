@@ -1,6 +1,8 @@
 ﻿@model IEnumerable<BugTracker.Models.Ticket>
 @using BugTracker.Services.Interfaces
 @using Microsoft.AspNetCore.Identity
+@using BugTracker.Services
+@using BugTracker.Models.Enums
 
 
 @inject SignInManager<BTUser> SignInManager
@@ -45,7 +47,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach (Ticket ticket in Model)
+                                    @foreach (Ticket ticket in Model.OrderByDescending(t => t.Created))
                                     {
                                         if (ticket.Archived == false)
                                         {
@@ -60,7 +62,10 @@
                                                     @ticket.Created.ToString("MMM dd, yyyy")
                                                 </td>
                                                 <td>
-                                                    @ticket.TicketType!.Name
+                                                    @foreach (Enum type in Enum.GetValues(typeof(TicketType)))
+                                                    {
+
+                                                    }
                                                 </td>
                                                 <td>
                                                     @ticket.TicketStatus!.Name

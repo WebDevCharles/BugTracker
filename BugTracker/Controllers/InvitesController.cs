@@ -122,7 +122,7 @@ namespace BugTracker.Controllers
 
                     await _inviteService.AddNewInviteAsync(invite);
 
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("Dashboard", "Home");
                 }
                 catch (Exception)
                 {

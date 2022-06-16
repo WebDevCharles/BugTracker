@@ -12,12 +12,10 @@
     BTUser btUser = await UserManager.GetUserAsync(User);
 }
 
-<h1>Dashboard</h1>
-
 <div class="container-fluid">
     <div>
         <a href="javascript:void(0);">
-            <h4 class="page-title">Welcome: @btUser.FullName!</h4>
+            <h4 class="page-title">Welcome: @btUser.FirstName!</h4>
             <div class="btn-list">
                 @if (User.IsInRole("Admin") || User.IsInRole("ProjectManager"))
                 {
@@ -208,12 +206,6 @@
                                                         @project.EndDate.ToString("MMM dd, yyyy")
                                                     </td>
                                                     <td>
-                                                        <div class="avatar-list avatar-list-stacked">
-                                                            @foreach (BTUser member in project.Members.Cast<BTUser>().Take(6))
-                                                            {
-                                                                <img class="avatar avatar-md brround" src="~/images/users/16.jpg" alt="img">
-                                                            }
-                                                        </div>
                                                     </td>
                                                     <td class="text-center">
                                                         @project.Tickets.Count

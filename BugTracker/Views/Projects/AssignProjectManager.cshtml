@@ -5,62 +5,64 @@
     ViewData["Title"] = "Assign Project Manager";
 }
 
-<h1>Assign Project Manager</h1>
+<div class="row mt-2">
+    <div class="col-md-4 col-sm-12 info-color-box col-md-offset-4">
+        <br />
+        <br />
+        <br />
+        <br />
+        <div class="white-box" style="border-radius:10px">
+            <h3 class="card-title text-center"><b>Assign Project Manager</b></h3>
+            <br />
+            <strong>Project Name:</strong>
+            <br />
+            <span>@Html.DisplayFor(model => model.Project!.Name)</span>
+            <br />
+            <br />
+            <strong>Description:</strong>
+            <br />
+            <span>@Html.DisplayFor(model => model.Project!.Description)</span>
+            <br />
+            <br />
+            <strong>Start Date:</strong>
+            <span class="pull-right">@Html.DisplayFor(model => model.Project!.StartDate)</span>
+            <br />
+            <br />
+            <strong>Deadline:</strong>
+            <span class="pull-right">@Html.DisplayFor(model => model.Project!.EndDate)</span>
+            <br />
+            <br />
+            <strong>Priority:</strong>
+            <span class="pull-right">@Html.DisplayFor(model => model.Project!.ProjectPriority!.Name)</span>
+            <br />
+            <br />
+            <br />
+            <form asp-action="AssignProjectManager" enctype="multipart/form-data">
+                <input type="hidden" asp-for="Project!.Id" />
+                <input type="hidden" asp-for="Project!.CompanyId" />
+                <input type="hidden" asp-for="Project!.Name" />
+                <input type="hidden" asp-for="Project!.Description" />
+                <input type="hidden" asp-for="Project!.ProjectPriorityId" />
+                <input type="hidden" asp-for="Project!.Created" />
+                <input type="hidden" asp-for="Project!.StartDate" />
+                <input type="hidden" asp-for="Project!.EndDate" />
+                <input type="hidden" asp-for="Project!.ImageFileName" />
+                <input type="hidden" asp-for="Project!.ImageFileData" />
+                <input type="hidden" asp-for="Project!.ImageContentType" />
 
-<h3>Assign a Project Manager</h3>
-<div>
-    <h4>Project</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Project!.Name)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Project!.Name)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Project!.Description)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Project!.Description)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Project!.StartDate)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Project!.StartDate)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Project!.EndDate)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Project!.EndDate)
-        </dd>
-    </dl>
-    
-    <form asp-action="AssignProjectManager" enctype="multipart/form-data">
-        <input type="hidden" asp-for="Project!.Id" />
-        <input type="hidden" asp-for="Project!.CompanyId" />
-        <input type="hidden" asp-for="Project!.Name" />
-        <input type="hidden" asp-for="Project!.Description" />
-        <input type="hidden" asp-for="Project!.ProjectPriorityId" />
-        <input type="hidden" asp-for="Project!.Created" />
-        <input type="hidden" asp-for="Project!.StartDate" />
-        <input type="hidden" asp-for="Project!.EndDate" />
-        <input type="hidden" asp-for="Project!.ImageFileName" />
-        <input type="hidden" asp-for="Project!.ImageFileData" />
-        <input type="hidden" asp-for="Project!.ImageContentType" />
-
-        @if (User.IsInRole(nameof(BTRoles.Admin)))
-            {
-                <div class="form-group">
-                    <label class="control-label">Project Manager</label>
-                    <select asp-for="PMID" class="form-control" asp-items="@Model.PMList">
-                        <option></option>
-                    </select>
-                </div>
-            }
-        <input type="submit" value="AssignProjectManager" class="btn btn-danger" /> |
-        <a asp-action="Index">Back to List</a>
-    </form>
+                @if (User.IsInRole(nameof(BTRoles.Admin)))
+                {
+                    <div class="form-group">
+                        <label class="control-label">Project Manager</label>
+                        <select asp-for="PMID" class="form-control" asp-items="@Model.PMList">
+                            <option></option>
+                        </select>
+                    </div>
+                }
+                <br />
+                <input type="submit" value="Assign Project Manager" class="btn btn-danger" />
+                <a asp-action="Index" class="btn btn-warning">Back to List</a>
+            </form>
+        </div>
+    </div>
 </div>

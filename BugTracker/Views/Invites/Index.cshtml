@@ -18,10 +18,7 @@
             <th>
                 @Html.DisplayNameFor(model => model.JoinDate)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CompanyToken)
-            </th>
-            <th>
+             <th>
                 @Html.DisplayNameFor(model => model.InviteeEmail)
             </th>
             <th>
@@ -46,9 +43,8 @@
                 @Html.DisplayNameFor(model => model.Invitor)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Invitee)
+                Action
             </th>
-            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -59,9 +55,6 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.JoinDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CompanyToken)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.InviteeEmail)
@@ -85,13 +78,9 @@
                 @Html.DisplayFor(modelItem => item.Project.Description)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Invitor.Id)
+                @Html.DisplayFor(modelItem => item.Invitor.FullName)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Invitee.Id)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
                 <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
             </td>

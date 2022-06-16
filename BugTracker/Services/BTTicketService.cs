@@ -37,25 +37,25 @@ namespace BugTracker.Services
         #region Get Unassigned Tickets
         public async Task<List<Ticket>> GetUnassignedTicketsAsync(int companyId)
         {
+            List<Ticket> result = new();
+            List<Ticket> tickets = new();
+
 
             try
             {
-                List<Ticket> tickets = await GetAllTicketsByCompanyIdAsync(companyId);
+                tickets = await _context.Tickets.Include(t => t.Project).Where(tickets => tickets.DeveloperUserId == null).ToListAsync();
 
                 foreach (Ticket ticket in tickets)
                 {
-                    if (ticket.DeveloperUserId != null)
-                    {
-                        tickets.Remove(ticket);
-                    }
+                    result.Add(ticket);
                 }
-
-                return tickets;
             }
             catch (Exception)
             {
+
                 throw;
             }
+            return result;
         }
         #endregion
 

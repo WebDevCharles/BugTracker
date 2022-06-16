@@ -8,7 +8,7 @@ namespace BugTracker.Models
         public int Id { get; set; }
 
         [Required]
-        [DisplayName("Ticket Type Name")]
+        [DisplayName("Ticket Type")]
         public string? Name { get; set; }
 
     }

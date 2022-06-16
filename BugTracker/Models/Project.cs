@@ -37,6 +37,7 @@ namespace BugTracker.Models
         [DisplayName("Project End Date")]
         public DateTime EndDate { get; set; }
 
+        [DisplayName("Project Priority")]
         public int ProjectPriorityId { get; set; }
 
 

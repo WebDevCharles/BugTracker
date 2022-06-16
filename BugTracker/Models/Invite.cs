@@ -17,6 +17,8 @@ namespace BugTracker.Models
         public DateTime? JoinDate { get; set; }
         public Guid CompanyToken { get; set; }
         public int CompanyId { get; set; }
+
+        [DisplayName("Project Name")]
         public int ProjectId { get; set; }
 
         [Required]
@@ -37,6 +39,8 @@ namespace BugTracker.Models
         public string? InviteeLastName { get; set; }
 
         public string? Message { get; set; }
+
+        [DisplayName("Valid?")]
         public bool IsValid { get; set; }
 
 

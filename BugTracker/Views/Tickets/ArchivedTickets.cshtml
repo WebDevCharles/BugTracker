@@ -72,7 +72,7 @@
                                                     @if (User.IsInRole("Admin") || User.IsInRole("ProjectManager"))
                                                     {
                                                         <a asp-controller="Tickets" asp-action="Edit" asp-route-id="@ticket.Id"><i class="icon-notebook"></i></a>
-                                                        <a asp-controller="Tickets" asp-action="Restore" asp-route-id="@ticket.Id"><i class="icon-folder"></i></a>
+                                                        <a asp-controller="Tickets" asp-action="Restore" asp-route-id="@ticket.Id"><i class="icon-home"></i></a>
                                                     }
                                                 </td>
                                             </tr>

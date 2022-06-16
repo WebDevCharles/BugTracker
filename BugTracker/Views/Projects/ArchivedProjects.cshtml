@@ -54,6 +54,7 @@
                                                     @if (User.IsInRole("Admin") || User.IsInRole("ProjectManager"))
                                                     {
                                                         <a asp-controller="Projects" asp-action="Edit" asp-route-id="@project.Id"><i class="icon-notebook"></i></a>
+                                                        <a asp-controller="Projects" asp-action="Restore" asp-route-id="@project.Id"><i class="icon-home"></i></a>
                                                     }
                                                 </td>
                                             </tr>

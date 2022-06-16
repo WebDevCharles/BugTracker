@@ -59,12 +59,12 @@
                                                     @project.EndDate.ToString("MMM dd, yyyy")
                                                 </td>
                                                 <td>
-                                                    <div class="avatar-list avatar-list-stacked">
+                                                    @*<div class="avatar-list avatar-list-stacked">
                                                         @foreach (BTUser member in project.Members.Cast<BTUser>().Take(6))
                                                         {
                                                             <img class="avatar avatar-md brround" src="~/images/users/16.jpg" alt="img">
                                                         }
-                                                    </div>
+                                                    </div>*@
                                                 </td>
                                                 <td class="text-center">
                                                     @project.Tickets.Count

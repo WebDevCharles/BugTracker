@@ -31,12 +31,15 @@ namespace BugTracker.Models
         [DisplayName("Archived By Project")]
         public bool ArchivedByProject { get; set; }
 
+        [DisplayName("Project Name")]
         public int ProjectId { get; set; }
 
+        [DisplayName("Ticket Priority")]
         public int TicketPriorityId { get; set; }
 
         public int TicketStatusId { get; set; }
 
+        [DisplayName("Ticket Type")]
         public int TicketTypeId { get; set; }
 
 

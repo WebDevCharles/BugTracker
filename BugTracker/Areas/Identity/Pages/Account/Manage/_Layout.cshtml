@@ -9,17 +9,18 @@
     }
 }
 
-<h1>Manage your account</h1>
+<div class="container-fluid">
+    <div class="row mt-2">
+        <div class="col-md-4 col-sm-8 info-color-box col-md-offset-4">
+            <div class="white-box" style="border-radius:10px">
+                <h3 class="card-title text-center"><b>Manage Your Account</b></h3>
+                <hr />
+                <br />
+                @*<partial name="_ManageNav" />*@
 
-<div>
-    <h2>Change your account settings</h2>
-    <hr />
-    <div class="row">
-        <div class="col-md-3">
-            <partial name="_ManageNav" />
-        </div>
-        <div class="col-md-9">
-            @RenderBody()
+                @RenderBody()
+
+            </div>
         </div>
     </div>
 </div>

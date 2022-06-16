@@ -3,6 +3,7 @@ using BugTracker.Extensions;
 using BugTracker.Models;
 using BugTracker.Models.Enums;
 using BugTracker.Models.ViewModels;
+using BugTracker.Services;
 using BugTracker.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -71,6 +72,7 @@ namespace BugTracker.Controllers
         [Authorize(Roles = "Admin,ProjectManager")]
         public async Task<IActionResult> UnassignedTickets()
         {
+
             int companyId = User.Identity!.GetCompanyId();
             List<Ticket> tickets = await _ticketService.GetUnassignedTicketsAsync(companyId);
 
@@ -149,7 +151,15 @@ namespace BugTracker.Controllers
             }
 
             ViewData["TicketPriorityId"] = new SelectList(_context.TicketPriorities, "Id", "Name");
-            ViewData["TicketTypeId"] = new SelectList(_context.TicketTypes, "Id", "Name");
+            //ViewData["TicketTypeId"] = new SelectList(_context.TicketTypes, "Id", "Name");
+            ViewData["TicketTypeId"] = new SelectList(Enum.GetValues(typeof(BTTicketTypes))
+                                                                                   .OfType<Enum>()
+                                                                                   .Select(x => new SelectListItem
+                                                                                   {
+                                                                                       Text = x.GetEnumDisplayName(),
+                                                                                       Value = Convert.ToInt32(x).ToString()
+                                                                                   }), "Value", "Text");
+
             return View();
         }
 
@@ -205,7 +215,7 @@ namespace BugTracker.Controllers
                 }
 
 
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Dashboard", "Home");
             }
 
             if (User.IsInRole(nameof(BTRoles.Admin)))
@@ -286,7 +296,7 @@ namespace BugTracker.Controllers
                 Ticket newTicket = await _ticketService.GetTicketAsNoTrackingAsync(ticket.Id);
                 await _ticketHistoryService.AddHistoryAsync(oldTicket, newTicket, userId);
 
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(AllTickets));
             }
 
             ViewData["TicketPriorityId"] = new SelectList(_context.TicketPriorities, "Id", "Name", ticket.TicketPriorityId);
@@ -377,7 +387,7 @@ namespace BugTracker.Controllers
                     await _notificationService.AddNotificationAsync(devNotification);
                     await _notificationService.SendEmailNotificationAsync(devNotification, "Ticket Updated");
 
-                    return RedirectToAction("Details", "Tickets", new { model.Ticket.Id });
+                    return RedirectToAction(nameof(Details), "Projects", new { id = model.Ticket.ProjectId });
 
                 }
             }

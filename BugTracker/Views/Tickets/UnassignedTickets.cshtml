@@ -60,13 +60,13 @@
                                                     @ticket.Created.ToString("MMM dd, yyyy")
                                                 </td>
                                                 <td>
-                                                    @ticket.TicketType!.Name
+                                                    @ticket.TicketType
                                                 </td>
                                                 <td>
-                                                    @ticket.TicketStatus!.Name
+                                                    @ticket.TicketStatus
                                                 </td>
                                                 <td>
-                                                    @ticket.TicketPriority!.Name
+                                                    @ticket.TicketPriority
                                                 </td>
                                                 <td class="text-left">
                                                     <a asp-controller="Tickets" asp-action="Details" asp-route-id="@ticket.Id"><i class="icon-eye"></i></a>
@@ -87,4 +87,4 @@
             </div>
         </div>
     </div>
-</div></table>
+</div>
