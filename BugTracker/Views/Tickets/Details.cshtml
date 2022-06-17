@@ -43,7 +43,7 @@
                                 <h2>Ticket Progress</h2>
                             </div>
                             <hr />
-                            <div class="card-body" style="height:500px;">
+                            <div class="card-body" style="height:375px;">
                                 <strong>Ticket @Html.DisplayNameFor(model => model.Title):</strong>
                                 <span class="pull-right">@Html.DisplayFor(model => model.Title)</span>
                                 <br />
@@ -96,15 +96,15 @@
                                 <h2>History</h2>
                                 <hr />
                             </div>
-                            <div class="card-body" style="height:500px;">
-                                
-                                    @foreach (TicketHistory history in Histories.OrderByDescending(h => h.Created))
-                                    {
- 
-                                            <p class="pl-5">@history.Description</p>
-                                            <p><small class="pl-5">By @history.User.FullName on @history.Created.ToString("MMM dd, yyyy")</small></p>
-                                        
-                                    }
+                            <div class="card-body" style="height:375px;">
+
+                                @foreach (TicketHistory history in Histories.OrderByDescending(h => h.Created))
+                                {
+
+                                    <p class="pl-5">@history.Description</p>
+                                    <p><small class="pl-5">By @history.User.FullName on @history.Created.ToString("MMM dd, yyyy")</small></p>
+
+                                }
                             </div>
                         </div>
                     </div>

@@ -5,55 +5,62 @@
     ViewData["Title"] = "Assign Developer";
 }
 
-<h1>Assign Developer To Ticket(s)</h1>
+<div class="row mt-2">
+    <div class="col-md-4 col-sm-12 info-color-box col-md-offset-4">
+        <br />
+        <br />
+        <br />
+        <br />
+        <div class="white-box" style="border-radius:10px">
+            <h3 class="card-title text-center"><b>Assign Developer</b></h3>
+            <br />
+            <strong>Ticket Name:</strong>
+            <br />
+            <span>
+                @Html.DisplayFor(model => model.Ticket!.Title)
+            </span>
+            <br />
+            <br />
+            <strong>Description:</strong>
+            <br />
+            <span>
+                @Html.DisplayFor(model => model.Ticket!.Description)
+            </span>
+            <br />
+            <br />
+            <strong>Submitter:</strong>
+            <br />
+            <span>
+                @Html.DisplayFor(model => model.Ticket!.SubmitterUser!.FullName)
+            </span>
+            <br />
+            <br />
+            <br />
+            <form asp-action="AssignDeveloperUser" enctype="multipart/form-data">
+                <input type="hidden" asp-for="Ticket!.Id" />
+                <input type="hidden" asp-for="Ticket!.Title" />
+                <input type="hidden" asp-for="Ticket!.Created" />
+                <input type="hidden" asp-for="Ticket!.Description" />
+                <input type="hidden" asp-for="Ticket!.SubmitterUserId" />
+                <input type="hidden" asp-for="Ticket!.ProjectId" />
+                <input type="hidden" asp-for="Ticket!.TicketPriorityId" />
+                <input type="hidden" asp-for="Ticket!.TicketStatusId" />
+                <input type="hidden" asp-for="Ticket!.TicketTypeId" />
+                <input type="hidden" asp-for="Ticket!.Archived" />
+                <input type="hidden" asp-for="Ticket!.ArchivedByProject" />
 
-<div>
-    <h4>Ticket</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Ticket!.Title)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Ticket!.Title)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Ticket!.Description)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Ticket!.Description)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Ticket!.SubmitterUser)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Ticket!.SubmitterUser!.FullName)
-        </dd>
-    </dl>
-    
-    <form asp-action="AssignDeveloperUser" enctype="multipart/form-data">
-        <input type="hidden" asp-for="Ticket!.Id" />
-        <input type="hidden" asp-for="Ticket!.Title" />
-        <input type="hidden" asp-for="Ticket!.Created" />
-        <input type="hidden" asp-for="Ticket!.Description" />
-        <input type="hidden" asp-for="Ticket!.SubmitterUserId" />
-        <input type="hidden" asp-for="Ticket!.ProjectId" />
-        <input type="hidden" asp-for="Ticket!.TicketPriorityId" />
-        <input type="hidden" asp-for="Ticket!.TicketStatusId" />
-        <input type="hidden" asp-for="Ticket!.TicketTypeId" />
-        <input type="hidden" asp-for="Ticket!.Archived" />
-        <input type="hidden" asp-for="Ticket!.ArchivedByProject" />
-
-        @if (User.IsInRole(nameof(BTRoles.Admin)) || User.IsInRole(nameof(BTRoles.ProjectManager)))
-            {
-                <div class="form-group">
-                    <label class="control-label">Developer</label>
-                    <select asp-for="DeveloperId" class="form-control" asp-items="@Model.Developers">
-                        <option></option>
-                    </select>
-                </div>
-            }
-        <input type="submit" value="Assign Developer" class="btn btn-danger" /> |
-        <a asp-action="Index">Back to List</a>
-    </form>
+                @if (User.IsInRole(nameof(BTRoles.Admin)) || User.IsInRole(nameof(BTRoles.ProjectManager)))
+                {
+                    <div class="form-group">
+                        <label class="control-label">Developer</label>
+                        <select asp-for="DeveloperId" class="form-control" asp-items="@Model.Developers">
+                            <option></option>
+                        </select>
+                    </div>
+                }
+                <input type="submit" value="Assign Developer" class="btn btn-info" />
+                <a asp-action="Details" class="btn btn-warning" asp-controller="Tickets" asp-route-id="@Model.Ticket!.Id">Back to List</a>
+            </form>
+        </div>
+    </div>
 </div>

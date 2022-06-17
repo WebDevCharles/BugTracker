@@ -121,15 +121,33 @@
                             <div class="body" style="overflow-y:auto;height:300px;">
                                 @if (projectManager is not null)
                                 {
-                                    <td>
-                                        <span class="font-weight-semibold">@projectManager.FullName</span>
-                                    </td>
+                                    @foreach (BTUser member in Model.Members)
+                                    {
+                                        @if (await _rolesService.IsUserInRoleAsync(member, nameof(BTRoles.ProjectManager)))
+                                        {
+
+                                            @if (member.AvatarData != null)
+                                            {
+                                                <span>
+                                                    <img id="avatarFileData" class="img-fluid img-thumbnail rounded" width="50" src="data:image/*;base64,@(Convert.ToBase64String(member.AvatarData))">
+                                                    @member.FullName
+                                                </span>
+                                                <br />
+                                            }
+                                            else
+                                            {
+                                                <span>
+                                                    <img id="avatarFileData" class="img-fluid img-thumbnail rounded" width="50" style="object-fit:cover" src="https://cdn.icon-icons.com/icons2/1378/PNG/512/avatardefault_92824.png">
+                                                    @member.FullName
+                                                </span>
+                                                <br />
+                                            }
+                                        }
+                                    }
                                 }
                                 else
                                 {
-                                    <td>
-                                        <span class="font-weight-semibold"><a asp-action="AssignProjectManager" asp-controller="Projects" asp-route-id="@Model.Id" class="btn btn-success">Assign Project Manager</a></span>
-                                    </td>
+                                    <span class="font-weight-semibold"><a asp-action="AssignProjectManager" asp-controller="Projects" asp-route-id="@Model.Id" class="btn btn-success">Assign Project Manager</a></span>
                                 }
                             </div>
                         </div>
@@ -206,7 +224,7 @@
                 </div>
             </div>
         </div>
-   
+
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12">
                 <div class="card card-line">
@@ -228,40 +246,45 @@
                                     <tbody>
                                         @foreach (var ticket in Model.Tickets.OrderByDescending(d => d.Created))
                                         {
-                                        <tr>
-                                            <td>
-                                                <a asp-action="Details" asp-controller="Tickets" asp-route-id="@ticket.Id" style="color:black">
-                                                    <strong>@ticket.Title</strong>
-                                                </a> 
-                                            </td>
-                                           
-                                            <td>
-                                                @if (ticket.DeveloperUserId != null)
-                                                {
-                                                <span>
-                                                    @ticket.DeveloperUser?.FullName
-                                                </span>
-                                                }
-                                                else if (User.IsInRole(nameof(BTRoles.Admin)) || User.IsInRole(nameof(BTRoles.ProjectManager)))
-                                                {
-                                                <a asp-controller="Tickets" asp-action="AssignDeveloperUser" class="btn btn-xs btn-info" asp-route-id="@ticket.Id">Assign Dev</a>
-                                                }
-                                            </td>
-                                            <td>
-                                                <span>@ticket.TicketStatus.Name</span>
-                                            </td>
-                                            <td>
-                                                <span>@ticket.TicketPriority.Name </span>
-                                            </td>
-                                            <td>@ticket.Created.ToString("MM-dd-yyyy")</td>
-                                            <td>
-                                                @if (User.IsInRole("Admin") || User.IsInRole("ProjectManager"))
-                                                {
-                                                <a asp-controller="Tickets" asp-action="Edit" asp-route-id="@ticket.Id"><i class="icon-notebook"></i></a>
-                                                <a asp-controller="Tickets" asp-action="Archive" asp-route-id="@ticket.Id"><i class="icon-trash"></i></a>
-                                                }
-                                            </td>
-                                        </tr>
+                                            <tr>
+                                                <td>
+                                                    <a asp-action="Details" asp-controller="Tickets" asp-route-id="@ticket.Id" style="color:black">
+                                                        <strong>@ticket.Title</strong>
+                                                    </a>
+                                                </td>
+
+                                                <td>
+                                                    @if (ticket.DeveloperUserId != null)
+                                                    {
+                                                        <span>
+                                                            @ticket.DeveloperUser?.FullName
+                                                        </span>
+                                                    }
+                                                    else if (User.IsInRole(nameof(BTRoles.Admin)) || User.IsInRole(nameof(BTRoles.ProjectManager)))
+                                                    {
+                                                        <a asp-controller="Tickets" asp-action="AssignDeveloperUser" class="btn btn-xs btn-info" asp-route-id="@ticket.Id">Assign Dev</a>
+                                                    }
+                                                </td>
+                                                <td>
+                                                    <span>@ticket.TicketStatus.Name</span>
+                                                </td>
+                                                <td>
+                                                    <span>@ticket.TicketPriority.Name </span>
+                                                </td>
+                                                <td>@ticket.Created.ToString("MM-dd-yyyy")</td>
+                                                <td>
+                                                    @if (User.IsInRole("Admin") || User.IsInRole("ProjectManager"))
+                                                    {
+                                                        <a asp-controller="Tickets" asp-action="Edit" asp-route-id="@ticket.Id"><i class="icon-notebook"></i></a>
+                                                        <a asp-controller="Tickets" asp-action="Details" asp-route-id="@ticket.Id"><i class="icon-eye"></i></a>
+                                                        <a asp-controller="Tickets" asp-action="Archive" asp-route-id="@ticket.Id"><i class="icon-trash"></i></a>
+                                                    }
+                                                    else
+                                                    {
+                                                        <a asp-controller="Tickets" asp-action="Details" asp-route-id="@ticket.Id"><i class="icon-eye"></i></a>
+                                                    }
+                                                </td>
+                                            </tr>
                                         }
                                     </tbody>
                                 </table>

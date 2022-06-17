@@ -62,10 +62,7 @@
                                                     @ticket.Created.ToString("MMM dd, yyyy")
                                                 </td>
                                                 <td>
-                                                    @foreach (Enum type in Enum.GetValues(typeof(TicketType)))
-                                                    {
-
-                                                    }
+                                                    @ticket.TicketType.Name
                                                 </td>
                                                 <td>
                                                     @ticket.TicketStatus!.Name

@@ -506,7 +506,7 @@ namespace BugTracker.Data
                 UserName = "demopm@bugtracker.com",
                 Email = "demopm@bugtracker.com",
                 FirstName = "Demo",
-                LastName = "ProjectManager",
+                LastName = "Project Manager",
                 EmailConfirmed = true,
                 CompanyId = company2Id
             };
@@ -523,7 +523,7 @@ namespace BugTracker.Data
             catch (Exception ex)
             {
                 Console.WriteLine("*************  ERROR  *************");
-                Console.WriteLine("Error Seeding Demo ProjectManager1 User.");
+                Console.WriteLine("Error Seeding Demo Project Manager1 User.");
                 Console.WriteLine(ex.Message);
                 Console.WriteLine("***********************************");
                 throw;
@@ -596,7 +596,7 @@ namespace BugTracker.Data
                 UserName = "demonew@bugtracker.com",
                 Email = "demonew@bugtracker.com",
                 FirstName = "Demo",
-                LastName = "NewUser",
+                LastName = "New User",
                 EmailConfirmed = true,
                 CompanyId = company2Id
             };

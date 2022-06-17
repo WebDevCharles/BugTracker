@@ -1,6 +1,9 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @inject SignInManager<BTUser> SignInManager
-
+@inject UserManager<BTUser> UserManager
+@{
+    BTUser btUser = await UserManager.GetUserAsync(User);
+}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -51,16 +54,16 @@
                 <a class="navbar-toggle font-20 hidden-sm hidden-md hidden-lg " href="javascript:void(0)" data-toggle="collapse" data-target=".navbar-collapse">
                     <i class="fa fa-bars"></i>
                 </a>
-                <div class="top-left-part">
-                    <a class="logo" asp-controller="Home" asp-action="Index">
-                        <b>
-                            <img src="~/images/logo.png" alt="home" />
-                        </b>
-                        <span>
-                            <img src="~/images/logo-text.png" alt="homepage" class="dark-logo" />
-                        </span>
-                    </a>
-                </div>
+                @*<div class="top-left-part">
+                <a class="logo" asp-controller="Home" asp-action="Dashboard">
+                <b>
+                <img src="~/images/logo.png" alt="home" />
+                </b>
+                <span>
+                <img src="~/images/logo-text.png" alt="homepage" class="dark-logo" />
+                </span>
+                </a>
+                </div>*@
                 <ul class="nav navbar-top-links navbar-left hidden-xs">
                     <li>
                         <a href="javascript:void(0)" class="sidebartoggler font-20 waves-effect waves-light"><i class="icon-arrow-left-circle"></i></a>
@@ -72,100 +75,100 @@
                     </form>
                     </li>*@
                 </ul>
-                <ul class="nav navbar-top-links navbar-right pull-right">
-                    @*<li class="dropdown">
-                    <a class="dropdown-toggle waves-effect waves-light font-20" data-toggle="dropdown" href="javascript:void(0);">
-                    <i class="icon-speech"></i>
-                    <span class="badge badge-xs badge-danger">6</span>
-                    </a>
-                    <ul class="dropdown-menu mailbox animated bounceInDown">
-                    <li>
-                    <div class="drop-title">You have 4 new messages</div>
-                    </li>
-                    <li>
-                    <div class="message-center">
-                    <a href="javascript:void(0);">
-                    <div class="user-img">
-                    <img src="~/images/1.jpg" alt="user" class="img-circle">
-                    <span class="profile-status online pull-right"></span>
-                    </div>
-                    <div class="mail-contnet">
-                    <h5>Pavan kumar</h5>
-                    <span class="mail-desc">Just see the my admin!</span>
-                    <span class="time">9:30 AM</span>
-                    </div>
-                    </a>
-                    <a href="javascript:void(0);">
-                    <div class="user-img">
-                    <img src="~/images/2.jpg" alt="user" class="img-circle">
-                    <span class="profile-status busy pull-right"></span>
-                    </div>
-                    <div class="mail-contnet">
-                    <h5>Sonu Nigam</h5>
-                    <span class="mail-desc">I've sung a song! See you at</span>
-                    <span class="time">9:10 AM</span>
-                    </div>
-                    </a>
-                    <a href="javascript:void(0);">
-                    <div class="user-img">
-                    <img src="~/images/3.jpg" alt="user" class="img-circle"><span class="profile-status away pull-right"></span>
-                    </div>
-                    <div class="mail-contnet">
-                    <h5>Arijit Sinh</h5>
-                    <span class="mail-desc">I am a singer!</span>
-                    <span class="time">9:08 AM</span>
-                    </div>
-                    </a>
-                    <a href="javascript:void(0);">
-                    <div class="user-img">
-                    <img src="~/images/4.jpg" alt="user" class="img-circle">
-                    <span class="profile-status offline pull-right"></span>
-                    </div>
-                    <div class="mail-contnet">
-                    <h5>Pavan kumar</h5>
-                    <span class="mail-desc">Just see the my admin!</span>
-                    <span class="time">9:02 AM</span>
-                    </div>
-                    </a>
-                    </div>
-                    </li>
-                    <li>
-                    <a class="text-center" href="javascript:void(0);">
-                    <strong>See all notifications</strong>
-                    <i class="fa fa-angle-right"></i>
-                    </a>
-                    </li>
-                    </ul>
-                    </li>*@
-                    @*<li class="dropdown">
-                    <a class="dropdown-toggle waves-effect waves-light font-20" data-toggle="dropdown" href="javascript:void(0);">
-                    <i class="icon-calender"></i>
-                    </a>
-                    <ul class="dropdown-menu dropdown-tasks animated slideInUp">
-                    <li>
-
-                    <div class="text-center">
-                    <a class="dropdown-item d-flex" asp-area="Identity" asp-page="/Account/Manage/Index">
-                    <div>
-                    <i class="fa-fw icon-power"></i><span id="dropInfo">Manage Account</span>
-                    </div>
-                    </a>
-                    <a class="dropdown-item d-flex" href="javascript:document.getElementById('logoutform').submit();">
-                    <div class="mt-1">
-                    <i class="fa-fw icon-pencil"></i><span id="dropInfo">Sign Out</span>
-                    </div>
-                    </a>
-                    </div>
-
-                    </li>
-                    </ul>
-                    </li>*@
-                    @*<li class="right-side-toggle">
-                    <a class="right-side-toggler waves-effect waves-light b-r-0 font-20" href="javascript:void(0)">
-                    <i class="icon-settings"></i>
-                    </a>
-                    </li>*@
+                @*<ul class="nav navbar-top-links navbar-right pull-right">*@
+                @*<li class="dropdown">
+                <a class="dropdown-toggle waves-effect waves-light font-20" data-toggle="dropdown" href="javascript:void(0);">
+                <i class="icon-speech"></i>
+                <span class="badge badge-xs badge-danger">6</span>
+                </a>
+                <ul class="dropdown-menu mailbox animated bounceInDown">
+                <li>
+                <div class="drop-title">You have 4 new messages</div>
+                </li>
+                <li>
+                <div class="message-center">
+                <a href="javascript:void(0);">
+                <div class="user-img">
+                <img src="~/images/1.jpg" alt="user" class="img-circle">
+                <span class="profile-status online pull-right"></span>
+                </div>
+                <div class="mail-contnet">
+                <h5>Pavan kumar</h5>
+                <span class="mail-desc">Just see the my admin!</span>
+                <span class="time">9:30 AM</span>
+                </div>
+                </a>
+                <a href="javascript:void(0);">
+                <div class="user-img">
+                <img src="~/images/2.jpg" alt="user" class="img-circle">
+                <span class="profile-status busy pull-right"></span>
+                </div>
+                <div class="mail-contnet">
+                <h5>Sonu Nigam</h5>
+                <span class="mail-desc">I've sung a song! See you at</span>
+                <span class="time">9:10 AM</span>
+                </div>
+                </a>
+                <a href="javascript:void(0);">
+                <div class="user-img">
+                <img src="~/images/3.jpg" alt="user" class="img-circle"><span class="profile-status away pull-right"></span>
+                </div>
+                <div class="mail-contnet">
+                <h5>Arijit Sinh</h5>
+                <span class="mail-desc">I am a singer!</span>
+                <span class="time">9:08 AM</span>
+                </div>
+                </a>
+                <a href="javascript:void(0);">
+                <div class="user-img">
+                <img src="~/images/4.jpg" alt="user" class="img-circle">
+                <span class="profile-status offline pull-right"></span>
+                </div>
+                <div class="mail-contnet">
+                <h5>Pavan kumar</h5>
+                <span class="mail-desc">Just see the my admin!</span>
+                <span class="time">9:02 AM</span>
+                </div>
+                </a>
+                </div>
+                </li>
+                <li>
+                <a class="text-center" href="javascript:void(0);">
+                <strong>See all notifications</strong>
+                <i class="fa fa-angle-right"></i>
+                </a>
+                </li>
                 </ul>
+                </li>*@
+                @*<li class="dropdown">
+                <a class="dropdown-toggle waves-effect waves-light font-20" data-toggle="dropdown" href="javascript:void(0);">
+                <i class="icon-calender"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-tasks animated slideInUp">
+                <li>
+
+                <div class="text-center">
+                <a class="dropdown-item d-flex" asp-area="Identity" asp-page="/Account/Manage/Index">
+                <div>
+                <i class="fa-fw icon-power"></i><span id="dropInfo">Manage Account</span>
+                </div>
+                </a>
+                <a class="dropdown-item d-flex" href="javascript:document.getElementById('logoutform').submit();">
+                <div class="mt-1">
+                <i class="fa-fw icon-pencil"></i><span id="dropInfo">Sign Out</span>
+                </div>
+                </a>
+                </div>
+
+                </li>
+                </ul>
+                </li>*@
+                @*<li class="right-side-toggle">
+                <a class="right-side-toggler waves-effect waves-light b-r-0 font-20" href="javascript:void(0)">
+                <i class="icon-settings"></i>
+                </a>
+                </li>*@
+                @*</ul>*@
             </div>
         </nav>
         <!-- ===== Top-Navigation-End ===== -->
@@ -193,6 +196,36 @@
                 <p class="profile-text m-t-15 font-16"><a href="javascript:void(0);"> Hanna Gover</a></p>
                 </div>
                 </div>*@
+
+                <div class="user-profile">
+                    <div class="dropdown user-pro-body">
+                        <div class="profile-image">
+                            <a class="dropdown-item" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">
+                                @if (btUser?.AvatarData != null)
+                                {
+                                    <img class="img-circle" src="data:image/*;base64,@(Convert.ToBase64String(btUser.AvatarData))" alt="user-img">
+                                }
+                                else
+                                {
+                                    <img class="img-circle" src="https://cdn.icon-icons.com/icons2/1378/PNG/512/avatardefault_92824.png" alt="user-img">
+                                }
+                            </a>
+                            @*<ul class="dropdown-menu animated flipInY">
+                            <li><a href="javascript:void(0);"><i class="fa fa-user"></i> Profile</a></li>
+                            <li><a href="javascript:void(0);"><i class="fa fa-inbox"></i> Inbox</a></li>
+                            <li role="separator" class="divider"></li>
+                            <li><a href="javascript:void(0);"><i class="fa fa-cog"></i> Account Settings</a></li>
+                            <li role="separator" class="divider"></li>
+                            <li><a href=""><i class="fa fa-power-off"></i> Logout</a></li>
+                            </ul>*@
+                        </div>
+                        @if (SignInManager.IsSignedIn(User))
+                        {
+                            <p class="profile-text m-t-15 font-16"><a href="javascript:void(0);">@btUser.FullName</a></p>
+                        }
+                    </div>
+                </div>
+                <hr />
                 <nav class="sidebar-nav">
                     <ul id="side-menu">
                         <br />
@@ -206,9 +239,12 @@
                             <li>
                                 <a class="waves-effect" asp-area="" aria-expanded="false" asp-controller="Invites" asp-action="Create"><i class="icon-paper-plane fa-fw"></i> <span class="hide-menu">Invite</span></a>
                             </li>
-                            <li>
-                                <a class="waves-effect" asp-area="" aria-expanded="false" asp-controller="UserRoles" asp-action="ManageUserRoles"><i class="icon-key fa-fw"></i> <span class="hide-menu">Manage Users</span></a>
-                            </li>
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <li>
+                                    <a class="waves-effect" asp-area="" aria-expanded="false" asp-controller="UserRoles" asp-action="ManageUserRoles"><i class="icon-key fa-fw"></i> <span class="hide-menu">Manage Users</span></a>
+                                </li>
+                            }
                             <li>
                                 <a class="waves-effect" href="javascript:void(0);" aria-expanded="false"><i class="icon-screen-desktop fa-fw"></i> <span class="hide-menu">Projects</span></a>
                                 <ul aria-expanded="false" class="collapse">
@@ -455,7 +491,7 @@
     <script src="~/js/db2.js"></script>
     <!-- ===== Style Switcher JS ===== -->
     <script src="~/js/jQuery.style.switcher.js"></script>
-    
+
     <!-- ===== Custom JavaScript ===== -->
     <script src="~/js/custom.js"></script>
 
