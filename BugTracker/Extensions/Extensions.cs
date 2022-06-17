@@ -3,7 +3,7 @@ using System.Reflection;
 
 namespace BugTracker.Extensions
 {
-    public static class EnumExtension
+    public static class EnumExtensions
     {
         public static string GetDisplayName(this Enum enumValue)
         {
